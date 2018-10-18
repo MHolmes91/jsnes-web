@@ -1,10 +1,20 @@
 import React, { Component } from "react";
 import "./ListPage.css";
-import { ListGroup } from "reactstrap";
-import { Link } from "react-router-dom";
-import config from "./config";
+// import { ListGroup } from "reactstrap";
+// import { Link } from "react-router-dom";
+// import config from "./config";
+import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
 class ListPage extends Component {
+  state = {
+    romUrl: ''
+  }
+
+  onSubmit = e => {
+    e.preventDefault();
+    this.props.history.push({ pathname: "/run/" + encodeURIComponent(this.state.romUrl) });
+  }
+
   render() {
     return (
       <div
@@ -14,15 +24,18 @@ class ListPage extends Component {
       >
         <div className="row justify-content-center">
           <div className="col-md-8">
-            <header className="mb-4">
-              <h1 className="mb-3">JSNES</h1>
-              <p>A JavaScript NES emulator.</p>
-              <p>
-                By <a href="https://twitter.com/bfirsh">Ben Firshman</a>. Source
-                on <a href="https://github.com/bfirsh/jsnes">GitHub</a>.
-              </p>
-            </header>
-            <ListGroup className="mb-4">
+            <Form inline onSubmit={this.onSubmit.bind(this)}>
+              <Input
+                className="col-md-10 col-sm-12"
+                name="romUrl"
+                id="romUrl"
+                onChange={e => this.setState({ romUrl: e.target.value})}
+                placeholder="Enter the IPFS route or URL of a ROM to start playing"
+              />
+              <Button className="col-md-2 col-sm-12" disabled={!this.state.romUrl}>Play!</Button>
+            </Form>
+            
+            {/* <ListGroup className="mb-4">
               {Object.keys(config.ROMS).map(key => (
                 <Link
                   key={key}
@@ -33,7 +46,7 @@ class ListPage extends Component {
                   <span className="float-right">&rsaquo;</span>
                 </Link>
               ))}
-            </ListGroup>
+              </ListGroup> */}
             <p>Or, drag and drop a ROM file onto the page.</p>
           </div>
         </div>

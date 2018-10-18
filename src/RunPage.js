@@ -204,13 +204,9 @@ class RunPage extends Component {
   }
 
   load = () => {
-    if (this.props.match.params.rom) {
-      const romName = this.props.match.params.rom;
-      const path = config.ROMS[romName];
-      if (!path) {
-        this.setState({ error: `No such ROM: ${romName}` });
-        return;
-      }
+    const romParam = this.props.match.params.rom
+    if (romParam) {
+      const path = decodeURIComponent(romParam);
       this.currentRequest = loadBinary(
         path,
         (err, data) => {
@@ -242,8 +238,13 @@ class RunPage extends Component {
 
   handleLoaded = data => {
     this.setState({ uiEnabled: true, running: true, loading: false });
-    this.nes.loadROM(data);
-    this.start();
+    try{
+      this.nes.loadROM(data);
+      this.start();
+    }
+    catch(e){
+      window.alert('An error has occurred while loading the ROM. This is likely because this is an invalid NES ROM file.');
+    }
   };
 
   start = () => {
